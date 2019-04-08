@@ -1,12 +1,12 @@
 package main
 
 import (
+	"crypto/tls"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
-	"crypto/tls"
 )
 
 func main() {
@@ -16,8 +16,8 @@ func main() {
 	v := url.Values{}
 	v.Set("action", "login")
 
-	v.Set("username", " ")
-	v.Set("password", " ")
+	v.Set("username", "")
+	v.Set("password", "")
 	v.Set("ac_id", "1")
 	v.Set("user_ip", "")
 	v.Set("nas_ip", "")
@@ -29,7 +29,7 @@ func main() {
 	body := strings.NewReader(v.Encode())
 	client := &http.Client{
 		Transport: tr,
-	}                                //客户端,被Get,Head以及Post使用
+	} //客户端,被Get,Head以及Post使用
 	reqest, err := http.NewRequest("POST", "https://10.108.255.249/include/auth_action.php", body)
 	if err != nil {
 		fmt.Println("Fatal error 1", err.Error())
