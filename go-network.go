@@ -28,7 +28,7 @@ func main() {
 		fmt.Println("Fatal error ", err.Error())
 	}
 	//给一个key设定为响应的value.
-	reqest.Header.Set("Content-Type", "application/x-www-form-urlencoded;param=value") //必须设定该参数,POST参数才能正常提交
+	reqest.Header.Set("Content-Type", "application/x-www-form-urlencoded") //必须设定该参数,POST参数才能正常提交
 
 	resp, err := client.Do(reqest) //发送请求
 	if err != nil {
