@@ -2,14 +2,18 @@ package main
 
 import (
 	"crypto/tls"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
+
+	ef "./extfunc"
 )
 
-func main() {
+func go_network() {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
@@ -48,4 +52,37 @@ func main() {
 	}
 
 	fmt.Println(string(content))
+}
+
+func main() {
+	var printVer bool
+	var cmdConfig ef.Config
+	var usrname, passwd string
+	var configFile string = ".gnconfig.json"
+	flag.BoolVar(&printVer, "version", false, "print version")
+	flag.StringVar(&usrname, "u", "", "username")
+	flag.StringVar(&passwd, "p", "", "password")
+	flag.Parse()
+
+	if printVer {
+		fmt.Println("v1.0.0")
+		os.Exit(0)
+	}
+	if usrname == "" || passwd == "" {
+		exists, err := ef.IsFileExists(configFile)
+		if (!exists || err != nil) {
+			fmt.Println("There is something wrong about login account!")
+			os.Exit(0)
+		}
+		config, err := ef.ParseConfig(configFile)
+		if err != nil {
+			config = &cmdConfig
+			if !os.IsNotExist(err) {
+				fmt.Fprintf(os.Stderr, "error reading %s: %v\n", configFile, err)
+				os.Exit(1)
+			}
+		} else {
+			ef.UpdateConfig(config, &cmdConfig)
+		}
+	}
 }
