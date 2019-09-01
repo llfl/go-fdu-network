@@ -83,8 +83,8 @@ func main() {
 			}
 
 		} else {
-			fmt.Println(config.Username)
-			fmt.Println(config.Password)
+			//fmt.Println(config.Username)
+			//fmt.Println(config.Password)
 			//ef.UpdateConfig(config, &cmdConfig)
 			goNetwork(config.Username, config.Password)
 		}
