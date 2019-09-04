@@ -1,27 +1,40 @@
 #！/bin/bash
 
-BUILD_TARGETS=('windows_amd64' 'windows_386' 'linux_amd64' 'darwin_amd64')
+# GOOS：目标平台的操作系统(darwin、freebsd、linux、windows)
+# GOARCH：目标平台的体系架构(386、amd64、arm)
+BUILD_TARGETS=('windows_amd64' 'windows_386' 'linux_amd64' 'linux_386' 'darwin_amd64')
 
-for TARGET in BUILD_TARGETS 
+if [ "$1" = 'clean_all' ] || [ "$1" = 'ca' ];then
+    rm -rf ./release
+elif [ "$1" = 'zip' ] || [ "$1" = 'z' ];then
+    ZIPFLAG='Z'
+elif [ "$1" = 'clean_zip' ] || [ "$1" = 'cz' ];then
+    ZIPFLAG='CZ'
+else
+    BUILD_TARGETS=("$*")
+fi
+
+
+
+for TARGET in ${BUILD_TARGETS[*]}
 do
-    TARGET_OS 
+    TARGET_OS=${TARGET%_*}
+    TARGET_ARCH=${TARGET#*_}
+    if [ $TARGET_OS = 'windows' ];then
+        FILENAME='go-network.exe'
+    else
+        FILENAME='go-network'
+    fi
+    mkdir -p ./release/$TARGET
+    GOOS=$TARGET_OS GOARCH=$TARGET_ARCH go build  -o ./release/$TARGET/$FILENAME ./go-network.go
+    cp ./config.json ./release/$TARGET
+    if [ $TARGET_OS = 'linux' ];then
+        cp ./go-network.service ./release/$TARGET
+    fi
+
+    if [ $ZIPFLAG = 'Z' ];then
+        zip -r ./release/$TARGET'.zip' ./release/$TARGET
+    elif [ $ZIPFLAG = 'CZ' ];then
+        zip -r -m ./release/$TARGET'.zip' ./release/$TARGET
+    fi
 done
-
-#GOOS：目标平台的操作系统（darwin、freebsd、linux、windows） 
-#GOARCH：目标平台的体系架构（386、amd64、arm） 
-GOOS=windows GOARCH=amd64 go build  -o ./release/Windows_amd64/go-network.exe ./go-network.go
-cp ./config.json ./release/Windows_amd64/
-zip -r ./release/Windows_amd64
-
-GOOS=windows GOARCH=386 go build -o ./release/Windows_x86/go-network.exe ./go-network.go 
-cp ./config.json ./release/Windows_x86/
-zip -r ./release/Windows_x86
-
-GOOS=linux GOARCH=amd64 go build -o ./release/Linux_amd64/go-network ./go-network.go
-cp ./config.json ./release/Linux_amd64/
-cp ./go-network.service ./release/Linux_amd64/
-zip -r ./release/Linux_amd64
-
-GOOS=darwin GOARCH=amd64 go build -o ./release/Darwin_amd64/go-network ./go-network.go
-cp ./config.json ./release/Darwin_amd64/
-zip -r ./release/Darwin_amd64
