@@ -2,22 +2,26 @@ package main
 
 import (
 	"crypto/tls"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
+
+	ef "./extfunc"
 )
 
-func main() {
+func goNetwork(usrName, passwd string) {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 	v := url.Values{}
 	v.Set("action", "login")
 
-	v.Set("username", "")
-	v.Set("password", "")
+	v.Set("username", usrName)
+	v.Set("password", passwd)
 	v.Set("ac_id", "1")
 	v.Set("user_ip", "")
 	v.Set("nas_ip", "")
@@ -48,4 +52,44 @@ func main() {
 	}
 
 	fmt.Println(string(content))
+}
+
+func main() {
+	var printVer bool
+	var cmdConfig ef.Config
+	//var usrname, passwd string
+	var configFile string
+	flag.BoolVar(&printVer, "version", false, "print version")
+	flag.StringVar(&cmdConfig.Username, "u", "", "username")
+	flag.StringVar(&cmdConfig.Password, "p", "", "password")
+	flag.StringVar(&configFile, "c", "config.json", "config file path")
+	flag.Parse()
+
+	if printVer {
+		fmt.Println("v1.0.0")
+		os.Exit(0)
+	}
+	if cmdConfig.Username == "" || cmdConfig.Password == "" {
+		exists, err := ef.IsFileExists(configFile)
+		if !exists || err != nil {
+			fmt.Println("There is something wrong about login account!")
+			os.Exit(0)
+		}
+		config, err := ef.ParseConfig(configFile)
+		if err != nil {
+			config = &cmdConfig
+			if !os.IsNotExist(err) {
+				fmt.Fprintf(os.Stderr, "error reading %s: %v\n", configFile, err)
+				os.Exit(1)
+			}
+
+		} else {
+			// fmt.Println(config.Username)
+			// fmt.Println(config.Password)
+			// ef.UpdateConfig(config, &cmdConfig)
+			goNetwork(config.Username, config.Password)
+		}
+	} else {
+		goNetwork(cmdConfig.Username, cmdConfig.Password)
+	}
 }

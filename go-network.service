@@ -1,0 +1,11 @@
+[Unit]
+Description=Go online the fdu network
+After=network.target
+
+[Service]
+Type=oneshot
+User=nobody
+ExecStart=/usr/local/bin/go-network -c /usr/local/src/config.json
+
+[Install]
+WantedBy=multi-user.target
