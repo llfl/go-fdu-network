@@ -6,9 +6,9 @@
 
 该版本优化了编译，可同时交叉编译多个平台的二进制文件。编译步骤如下
 
-1. 在本目录下运行build.sh即可默认编译Windows、Linux、macOS平台的二进制文件并生成于./release 文件夹下。
+1. 在本目录下运行build.sh即可默认编译Windows、Linux、macOS平台的二进制文件并生成于./release 文件夹下
 
-2. build.sh 支持参数编译，如运行"./build.sh clean_all"或"./build.sh ca"可以清理./release。
+2. build.sh 支持参数编译，如运行"./build.sh clean_all"或"./build.sh ca"可以清理./release
 
 ``` notice
 !!! 注意 !!!:
