@@ -1,6 +1,6 @@
-
+/release
 go-network
 *.exe
 go-network-unkonw
 zgo-network
-/release
+
