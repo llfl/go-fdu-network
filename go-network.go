@@ -58,10 +58,11 @@ func main() {
 	var printVer bool
 	var cmdConfig ef.Config
 	//var usrname, passwd string
-	var configFile = string("config.json")
+	var configFile string
 	flag.BoolVar(&printVer, "version", false, "print version")
 	flag.StringVar(&cmdConfig.Username, "u", "", "username")
 	flag.StringVar(&cmdConfig.Password, "p", "", "password")
+	flag.StringVar(&configFile, "c", "config.json", "config file path")
 	flag.Parse()
 
 	if printVer {
@@ -83,9 +84,9 @@ func main() {
 			}
 
 		} else {
-			//fmt.Println(config.Username)
-			//fmt.Println(config.Password)
-			//ef.UpdateConfig(config, &cmdConfig)
+			// fmt.Println(config.Username)
+			// fmt.Println(config.Password)
+			// ef.UpdateConfig(config, &cmdConfig)
 			goNetwork(config.Username, config.Password)
 		}
 	} else {
