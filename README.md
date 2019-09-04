@@ -11,11 +11,13 @@
 2. build.sh 支持参数编译，如运行"./build.sh clean_all"或"./build.sh ca"可以清理./release。
 
 > !!! 注意 !!!:
+
 > "build.sh clean_all" 包含 "rm -rf" 请注意不要使用管理员或任何root权限运行。
 
 3. 直接输入相应的交叉编译参数即可编译相应的平台。交叉编译参数示例如下
 
 > "目标操作系统"+"下划线"+"目标构架"
+
 > 如：若想为运行linux操作系统的arm64交叉编译 编译参数为"linux_arm64"
 > 运行 "./build.sh linux_arm64"即可编译相应的二进制文件
 
