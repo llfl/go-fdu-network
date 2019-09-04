@@ -1,4 +1,5 @@
-
+/.vscode
+*/.DS_Store
 go-network
 *.exe
 go-network-unkonw
