@@ -4,6 +4,8 @@
 # GOARCH：目标平台的体系架构(386、amd64、arm)
 BUILD_TARGETS=('windows_amd64' 'windows_386' 'linux_amd64' 'linux_386' 'darwin_amd64' 'linux_armv6' 'linux_armv7')
 
+VERSION='v1.1.0'
+
 if [ "$1" = 'clean_all' ] || [ "$1" = 'ca' ];then
     rm -rf ./release
     exit
@@ -14,7 +16,9 @@ elif [ "$1" = 'clean_zip' ] || [ "$1" = 'cz' ];then
 elif [ $# -ne 0 ];then
     BUILD_TARGETS=("$*")
 else
+    if [ -d "./release" ];then
     rm -rf ./release
+    fi
 fi
 
 
@@ -35,6 +39,7 @@ do
         GOARM=6
         TARGET_ARCH='arm'
     fi
+    TARGET=$TARGET'_'$VERSION
     mkdir -p ./release/$TARGET
     GOOS=$TARGET_OS GOARCH=$TARGET_ARCH go build  -o ./release/$TARGET/$FILENAME ./go-network.go
     cp ./config.json ./release/$TARGET

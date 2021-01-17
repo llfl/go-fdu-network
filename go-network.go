@@ -14,6 +14,10 @@ import (
 	ef "./extfunc"
 )
 
+const (
+	version = "v1.1.0"
+)
+
 func goNetwork(usrName, passwd string) {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
@@ -70,7 +74,7 @@ func main() {
 	flag.Parse()
 
 	if printVer {
-		fmt.Println("v1.0.0")
+		fmt.Println(version)
 		os.Exit(0)
 	}
 	if cmdConfig.Username == "" || cmdConfig.Password == "" {
@@ -92,6 +96,7 @@ func main() {
 			}
 
 		} else {
+			fmt.Println(version + ": Now go_network working...")
 			if isDeamon {
 				for {
 					isOnline = false
@@ -103,7 +108,7 @@ func main() {
 						time.Sleep(1*time.Second)
 					}
 					if !isOnline {
-						fmt.Println("Not ONLINE! Now trying network authorizing.")
+						fmt.Println("Not ONLINE! Trying network authorizing...")
 						goNetwork(config.Username, config.Password)
 						time.Sleep(5*time.Second)
 						isOnline = ef.CheckServer(config.URLCheck, config.URLPort)
