@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 	"time"
+	"os/exec"
 )
 
 var icmp ICMP
@@ -103,4 +104,14 @@ func CheckDNS(addr string) bool {
 	}
 	return false
 
+}
+
+//SystemPing call system ping
+func SystemPing(addr string) bool {
+	cmd := exec.Command("ping", addr, "-c", "1", "-W", "5")
+	err := cmd.Run()
+	if err != nil {
+		return false
+	}
+	return true
 }

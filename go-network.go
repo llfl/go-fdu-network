@@ -102,8 +102,7 @@ func main() {
 				for {
 					isOnline = false
 					for i:=0; i<5; i++{
-						// isOnline = ef.CheckServer(config.URLCheck, config.URLPort)
-						isOnline = ef.CheckDNS(config.DNSCheck)
+						isOnline = ef.SystemPing(config.URLCheck)
 						if isOnline {
 							break
 						}
@@ -114,8 +113,7 @@ func main() {
 						goNetwork(config.Username, config.Password)
 						time.Sleep(5*time.Second)
 						fmt.Println("Trying check "+ config.URLCheck + config.URLPort)
-						// isOnline = ef.CheckServer(config.URLCheck, config.URLPort)
-						isOnline = ef.CheckDNS(config.DNSCheck)
+						isOnline = ef.SystemPing(config.URLCheck)
 						if isOnline {
 							fmt.Println("Finished!")
 						} else {
