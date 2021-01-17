@@ -4,7 +4,7 @@
 # GOARCH：目标平台的体系架构(386、amd64、arm)
 BUILD_TARGETS=('windows_amd64' 'windows_386' 'linux_amd64' 'linux_386' 'darwin_amd64' 'linux_armv6' 'linux_armv7')
 
-VERSION='v1.1.4'
+VERSION='v1.1.5'
 
 if [ "$1" = 'clean_all' ] || [ "$1" = 'ca' ];then
     rm -rf ./release
