@@ -1,4 +1,7 @@
 {
     "username" : "put username here",
-    "password" : "password here please"
+    "password" : "password here please",
+    "urlCheck" : "baidu.com",
+    "urlPort"  : "80"
+
 }

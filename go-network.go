@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"time"
 	"strings"
 
 	ef "./extfunc"
@@ -56,10 +57,13 @@ func goNetwork(usrName, passwd string) {
 
 func main() {
 	var printVer bool
+	var isDeamon bool
+	var isOnline bool
 	var cmdConfig ef.Config
 	//var usrname, passwd string
 	var configFile string
 	flag.BoolVar(&printVer, "version", false, "print version")
+	flag.BoolVar(&isDeamon, "deamon", false, "deamon flag (UNIX is supported)")
 	flag.StringVar(&cmdConfig.Username, "u", "", "username")
 	flag.StringVar(&cmdConfig.Password, "p", "", "password")
 	flag.StringVar(&configFile, "c", "config.json", "config file path")
@@ -72,8 +76,12 @@ func main() {
 	if cmdConfig.Username == "" || cmdConfig.Password == "" {
 		exists, err := ef.IsFileExists(configFile)
 		if !exists || err != nil {
-			fmt.Println("There is something wrong about login account!")
-			os.Exit(0)
+			configFile = "/etc/go-network/config.json"
+			existsSys, errSys := ef.IsFileExists(configFile)
+			if !existsSys || errSys != nil{
+				fmt.Println("There is something wrong about login account!")
+				os.Exit(-1)
+			}
 		}
 		config, err := ef.ParseConfig(configFile)
 		if err != nil {
@@ -84,10 +92,32 @@ func main() {
 			}
 
 		} else {
-			// fmt.Println(config.Username)
-			// fmt.Println(config.Password)
-			// ef.UpdateConfig(config, &cmdConfig)
-			goNetwork(config.Username, config.Password)
+			if isDeamon {
+				for {
+					isOnline = false
+					for i:=0; i<5; i++{
+						isOnline = ef.CheckServer(config.URLCheck, config.URLPort)
+						if isOnline {
+							break
+						}
+						time.Sleep(1*time.Second)
+					}
+					if !isOnline {
+						fmt.Println("Not ONLINE! Now trying network authorizing.")
+						goNetwork(config.Username, config.Password)
+						time.Sleep(5*time.Second)
+						isOnline = ef.CheckServer(config.URLCheck, config.URLPort)
+						if isOnline {
+							fmt.Println("Finished!")
+						} else {
+							fmt.Println("Something WRONG!! More attempts will be taken in a moments. ")
+						}
+					}
+					time.Sleep(60*time.Second)
+				}
+			} else{
+				goNetwork(config.Username, config.Password)
+			}
 		}
 	} else {
 		goNetwork(cmdConfig.Username, cmdConfig.Password)

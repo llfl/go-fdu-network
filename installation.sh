@@ -30,7 +30,9 @@ while $LOOP;do
             cat << EOF | sudo tee -a /etc/go-network/config.json
 {
     "username" : "${USRNAME}",
-    "password" : "${PASS}"
+    "password" : "${PASS}",
+    "urlCheck" : "baidu.com",
+    "urlPort"  : "80"
 }
 EOF
         fi

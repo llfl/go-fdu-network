@@ -6,12 +6,15 @@ BUILD_TARGETS=('windows_amd64' 'windows_386' 'linux_amd64' 'linux_386' 'darwin_a
 
 if [ "$1" = 'clean_all' ] || [ "$1" = 'ca' ];then
     rm -rf ./release
+    exit
 elif [ "$1" = 'zip' ] || [ "$1" = 'z' ];then
     ZIPFLAG='Z'
 elif [ "$1" = 'clean_zip' ] || [ "$1" = 'cz' ];then
     ZIPFLAG='CZ'
-else
+elif [ $# -ne 0 ];then
     BUILD_TARGETS=("$*")
+else
+    rm -rf ./release
 fi
 
 
@@ -40,13 +43,13 @@ do
         cp ./installation.sh ./release/$TARGET
     fi
 
-    if [ $ZIPFLAG = 'Z' ];then
-        cd ./release
-        zip -r ./$TARGET'.zip' ./$TARGET
-        cd ..
-    elif [ $ZIPFLAG = 'CZ' ];then
+    if [ -n $ZIPFLAG ] || [ $ZIPFLAG = 'CZ' ];then
         cd ./release
         zip -r -m ./$TARGET'.zip' ./$TARGET
+        cd ..
+    elif [ $ZIPFLAG = 'Z' ];then
+        cd ./release
+        zip -r ./$TARGET'.zip' ./$TARGET
         cd ..
     fi
 done

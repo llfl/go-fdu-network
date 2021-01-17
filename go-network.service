@@ -3,9 +3,9 @@ Description=Go online the fdu network
 After=network.target
 
 [Service]
-Type=oneshot
+Type=simple
 User=nobody
-ExecStart=/usr/bin/go-network -c /etc/go-network/config.json
+ExecStart=/usr/bin/go-network -d -c /etc/go-network/config.json
 
 [Install]
 WantedBy=multi-user.target
