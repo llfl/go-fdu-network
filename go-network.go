@@ -112,7 +112,7 @@ func main() {
 						fmt.Println("Not ONLINE! Trying network authorizing...")
 						goNetwork(config.Username, config.Password)
 						time.Sleep(5*time.Second)
-						fmt.Println("Trying check "+ config.URLCheck + config.URLPort)
+						fmt.Println("Trying check: "+ config.URLCheck)
 						isOnline = ef.SystemPing(config.URLCheck)
 						if isOnline {
 							fmt.Println("Finished!")
@@ -120,7 +120,7 @@ func main() {
 							fmt.Println("Something WRONG!! More attempts will be taken in a moments. ")
 						}
 					}
-					time.Sleep(60*time.Second)
+					time.Sleep(180*time.Second)
 				}
 			} else{
 				goNetwork(config.Username, config.Password)
