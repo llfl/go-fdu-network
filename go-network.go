@@ -8,12 +8,18 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"time"
 	"strings"
 
 	ef "./extfunc"
 )
 
+const (
+	version = "v1.1.7"
+)
+
 func goNetwork(usrName, passwd string) {
+	fmt.Println("Net authorizing with account: ", usrName)
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
@@ -56,24 +62,31 @@ func goNetwork(usrName, passwd string) {
 
 func main() {
 	var printVer bool
+	var isDeamon bool
+	var isOnline bool
 	var cmdConfig ef.Config
 	//var usrname, passwd string
 	var configFile string
-	flag.BoolVar(&printVer, "version", false, "print version")
+	flag.BoolVar(&printVer, "v", false, "print version")
+	flag.BoolVar(&isDeamon, "d", false, "deamon flag (UNIX is supported)")
 	flag.StringVar(&cmdConfig.Username, "u", "", "username")
 	flag.StringVar(&cmdConfig.Password, "p", "", "password")
 	flag.StringVar(&configFile, "c", "config.json", "config file path")
 	flag.Parse()
 
 	if printVer {
-		fmt.Println("v1.0.0")
+		fmt.Println(version)
 		os.Exit(0)
 	}
 	if cmdConfig.Username == "" || cmdConfig.Password == "" {
 		exists, err := ef.IsFileExists(configFile)
 		if !exists || err != nil {
-			fmt.Println("There is something wrong about login account!")
-			os.Exit(0)
+			configFile = "/etc/go-network/config.json"
+			existsSys, errSys := ef.IsFileExists(configFile)
+			if !existsSys || errSys != nil{
+				fmt.Println("There is something wrong about login account!")
+				os.Exit(-1)
+			}
 		}
 		config, err := ef.ParseConfig(configFile)
 		if err != nil {
@@ -84,10 +97,34 @@ func main() {
 			}
 
 		} else {
-			// fmt.Println(config.Username)
-			// fmt.Println(config.Password)
-			// ef.UpdateConfig(config, &cmdConfig)
-			goNetwork(config.Username, config.Password)
+			fmt.Println(version + ": Now go_network working...")
+			if isDeamon {
+				for {
+					isOnline = false
+					for i:=0; i<5; i++{
+						isOnline = ef.SystemPing(config.URLCheck)
+						if isOnline {
+							break
+						}
+						time.Sleep(1*time.Second)
+					}
+					if !isOnline {
+						fmt.Println("Not ONLINE! Trying network authorizing...")
+						goNetwork(config.Username, config.Password)
+						time.Sleep(5*time.Second)
+						fmt.Println("Trying check: "+ config.URLCheck)
+						isOnline = ef.SystemPing(config.URLCheck)
+						if isOnline {
+							fmt.Println("Finished!")
+						} else {
+							fmt.Println("Something WRONG!! More attempts will be taken in a moments. ")
+						}
+					}
+					time.Sleep(180*time.Second)
+				}
+			} else{
+				goNetwork(config.Username, config.Password)
+			}
 		}
 	} else {
 		goNetwork(cmdConfig.Username, cmdConfig.Password)

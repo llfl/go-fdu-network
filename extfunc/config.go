@@ -16,6 +16,9 @@ import (
 type Config struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
+	URLCheck string `json:"urlCheck"`
+	URLPort  string `json:"urlPort"`
+	DNSCheck string `json:"dnsCheck"`
 	//Timeout     int       `json:"timeout"`
 }
 
