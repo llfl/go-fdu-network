@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	version = "v1.1.0"
+	version = "v1.1.4"
 )
 
 func goNetwork(usrName, passwd string) {
@@ -66,8 +66,8 @@ func main() {
 	var cmdConfig ef.Config
 	//var usrname, passwd string
 	var configFile string
-	flag.BoolVar(&printVer, "version", false, "print version")
-	flag.BoolVar(&isDeamon, "deamon", false, "deamon flag (UNIX is supported)")
+	flag.BoolVar(&printVer, "v", false, "print version")
+	flag.BoolVar(&isDeamon, "d", false, "deamon flag (UNIX is supported)")
 	flag.StringVar(&cmdConfig.Username, "u", "", "username")
 	flag.StringVar(&cmdConfig.Password, "p", "", "password")
 	flag.StringVar(&configFile, "c", "config.json", "config file path")
@@ -111,6 +111,7 @@ func main() {
 						fmt.Println("Not ONLINE! Trying network authorizing...")
 						goNetwork(config.Username, config.Password)
 						time.Sleep(5*time.Second)
+						fmt.Println("Trying check "+ config.URLCheck + config.URLPort)
 						isOnline = ef.CheckServer(config.URLCheck, config.URLPort)
 						if isOnline {
 							fmt.Println("Finished!")
