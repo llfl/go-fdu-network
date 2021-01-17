@@ -19,6 +19,7 @@ const (
 )
 
 func goNetwork(usrName, passwd string) {
+	fmt.Println("Net authorizing with account: ", usrName)
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
