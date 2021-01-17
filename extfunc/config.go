@@ -18,6 +18,7 @@ type Config struct {
 	Password string `json:"password"`
 	URLCheck string `json:"urlCheck"`
 	URLPort  string `json:"urlPort"`
+	DNSCheck string `json:"dnsCheck"`
 	//Timeout     int       `json:"timeout"`
 }
 

@@ -2,6 +2,6 @@
     "username" : "put username here",
     "password" : "password here please",
     "urlCheck" : "baidu.com",
-    "urlPort"  : "80"
-
+    "urlPort"  : "80",
+    "dnsCheck" : "is_online.cihlab.top"
 }

@@ -94,3 +94,13 @@ func CheckServer(ip string, port string ) bool {
 	}
 	return true
 }
+
+//CheckDNS CheckDNS txtrecords
+func CheckDNS(addr string) bool {
+	txtrecords, _ := net.LookupTXT(addr)
+	if txtrecords[0] == "ok" {
+		return true
+	}
+	return false
+
+}
