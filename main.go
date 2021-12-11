@@ -10,7 +10,7 @@ import (
 	"os"
 	"strings"
 
-	ef "./extfunc"
+	ef "go-network/extfunc"
 )
 
 func goNetwork(usrName, passwd string) {
@@ -66,7 +66,7 @@ func main() {
 	flag.Parse()
 
 	if printVer {
-		fmt.Println("v1.0.0")
+		fmt.Println("v2.2.0")
 		os.Exit(0)
 	}
 	if cmdConfig.Username == "" || cmdConfig.Password == "" {

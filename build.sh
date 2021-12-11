@@ -33,7 +33,7 @@ do
         TARGET_ARCH='arm'
     fi
     mkdir -p ./release/$TARGET
-    GOOS=$TARGET_OS GOARCH=$TARGET_ARCH go build  -o ./release/$TARGET/$FILENAME ./go-network.go
+    GOOS=$TARGET_OS GOARCH=$TARGET_ARCH go build  -o ./release/$TARGET/$FILENAME
     cp ./config.json ./release/$TARGET
     if [ $TARGET_OS = 'linux' ];then
         cp ./go-network.service ./release/$TARGET
